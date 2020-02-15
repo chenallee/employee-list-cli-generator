@@ -13,23 +13,44 @@ const addEmployee = require(`./lib/employeeToAdd-questions`);
 
 //const promiseHandler = promise => promise.then(res => [null, res].catch(err => [err, null]));
 
-const init = async() => {
+const init = async () => {
+  const employeesArray;
+  const engineersArray;
+  const InternsArray;
+
   //first prompt the user for manager info
   const managerResponse = await inquirer.prompt(managerQuestions);
-    //then create a new manager object
+  //then create a new manager object
   const teamManager = new Manager(managerResponse.employeeName, managerResponse.id, managerResponse.email, managerResponse.officeNumber);
 
-  console.log(teamManager);
+  //add manager to the array of employees
+  employeesArray.push(teamManager);
 
-  while((await inquirer.prompt(addEmployee)).newEmployee !== 'None'){
-    console.log(`add employee to array`);
+  let addToTeam = true;
+  while (addToTeam) {
+    //prompt adding new employee
+    let newEmployee = (await inquirer.prompt(addEmployee)).newEmployee;
+
+    //if none return false
+    if(newEmployee === 'None'){
+      return false;
+    }
+
+     //if engineer add
+     if(newEmployee === 'Engineer'){
+       console.log(`add engineer`);
+       //if intern add
+     }else if (newEmployee === 'Intern'){
+       console.log(`add intern`);
+     }    
   }
 
-  //then if the response isn't none, we create a new employee object and add it to the respective array
-// inquirer.prompt(addEmployee).then(response => {
-//   console.log(response);
-//   console.log(response.addMore);
   
+
+  //then if the response isn't none, we create a new employee object and add it to the respective array
+  // inquirer.prompt(addEmployee).then(response => {
+  //   console.log(response);
+  //   console.log(response.addMore);
 
 };
 
