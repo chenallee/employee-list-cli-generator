@@ -4,20 +4,25 @@ const chalk = require(`chalk`);
 const inquirer = require(`inquirer`);
 
 const Manager = require(`./lib/manager`);
+const Engineer = require(`./lib/engineer`);
+const Intern = require(`./lib/intern`);
 
 const managerQuestions = require(`./lib/manager-questions`);
+const engineerQuestions = require(`./lib/engineer-questions`);
+const internQuestions = require(`./lib/intern-questions`);
 const addEmployee = require(`./lib/employeeToAdd-questions`);
-
-// console.log(`Welcome! First you'll be prompted to add the information for the team manager. After that you'll be able to enter the information for other team members.
-// \n Let's start!\n`);
 
 //const promiseHandler = promise => promise.then(res => [null, res].catch(err => [err, null]));
 
+// INIT ASYNC FUNCTION
+// ============================
 const init = async () => {
-  const employeesArray;
-  const engineersArray;
-  const InternsArray;
+  const employeesArray = [];
+  const engineersArray = [];
+  const InternsArray = [];
 
+  // MANAGER INFO
+  // ~~~~~~~~~~~~~~~~~~~~~~~~~~
   //first prompt the user for manager info
   const managerResponse = await inquirer.prompt(managerQuestions);
   //then create a new manager object
@@ -26,6 +31,9 @@ const init = async () => {
   //add manager to the array of employees
   employeesArray.push(teamManager);
 
+
+  // OTHER EMPLOYEES
+  // ~~~~~~~~~~~~~~~~~~~~~~~~~~
   let addToTeam = true;
   while (addToTeam) {
     //prompt adding new employee
@@ -33,25 +41,36 @@ const init = async () => {
 
     //if none return false
     if(newEmployee === 'None'){
-      return false;
+      addToTeam = false;
     }
 
      //if engineer add
      if(newEmployee === 'Engineer'){
        console.log(`add engineer`);
+      //create new obj and add to engineer array
+      const engineerResponse = await inquirer.prompt(engineerQuestions);
+      const newEngineer = new Engineer(engineerResponse.employeeName, engineerResponse.id, engineerResponse.email, engineerResponse.github);
+      engineersArray.push(newEngineer);
+
        //if intern add
      }else if (newEmployee === 'Intern'){
        console.log(`add intern`);
+       //create new obj and add to intern array
+      const internResponse = await inquirer.prompt(internQuestions);
+      const newIntern = new Intern(internResponse.employeeName, internResponse.id, internResponse.email, internResponse.school);
+      InternsArray.push(newIntern);
      }    
+     console.log(employeesArray);
+     console.log(engineersArray);
+     console.log(InternsArray);
   }
 
-  
+  console.log(employeesArray);
+  console.log(engineersArray);
+  console.log(InternsArray);
+  //combine all employees
 
-  //then if the response isn't none, we create a new employee object and add it to the respective array
-  // inquirer.prompt(addEmployee).then(response => {
-  //   console.log(response);
-  //   console.log(response.addMore);
-
+  //
 };
 
 init();
