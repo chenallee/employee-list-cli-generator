@@ -2,6 +2,7 @@
 // ============================
 const chalk = require(`chalk`);
 const inquirer = require(`inquirer`);
+const fs = require(`fs`);
 
 const Manager = require(`./lib/manager`);
 const Engineer = require(`./lib/engineer`);
@@ -12,14 +13,13 @@ const engineerQuestions = require(`./lib/engineer-questions`);
 const internQuestions = require(`./lib/intern-questions`);
 const addEmployee = require(`./lib/employeeToAdd-questions`);
 
-//const promiseHandler = promise => promise.then(res => [null, res].catch(err => [err, null]));
+const generateHTML = require('./templates/output-template');
 
 // INIT ASYNC FUNCTION
 // ============================
 const init = async () => {
-  const employeesArray = [];
   const engineersArray = [];
-  const InternsArray = [];
+  const internsArray = [];
 
   // MANAGER INFO
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -29,7 +29,7 @@ const init = async () => {
   const teamManager = new Manager(managerResponse.employeeName, managerResponse.id, managerResponse.email, managerResponse.officeNumber);
 
   //add manager to the array of employees
-  employeesArray.push(teamManager);
+  //employeesArray.push(teamManager);
 
 
   // OTHER EMPLOYEES
@@ -58,19 +58,20 @@ const init = async () => {
        //create new obj and add to intern array
       const internResponse = await inquirer.prompt(internQuestions);
       const newIntern = new Intern(internResponse.employeeName, internResponse.id, internResponse.email, internResponse.school);
-      InternsArray.push(newIntern);
+      internsArray.push(newIntern);
      }    
-     console.log(employeesArray);
-     console.log(engineersArray);
-     console.log(InternsArray);
   }
 
-  console.log(employeesArray);
-  console.log(engineersArray);
-  console.log(InternsArray);
-  //combine all employees
+  //send the employees data to be slotted into the html template
+  const formattedHTML = generateHTML(teamManager, engineersArray, internsArray);
 
-  //
+  fs.writeFile('./output/output.html', formattedHTML, err => {
+    if(err){
+      return console.log(err);
+    }else{
+      console.log(`Success!`)
+    }
+  });
 };
 
 init();
