@@ -4,6 +4,7 @@
   "description": "",
   "main": "./app.js",
   "dependencies": {
+    "chalk": "^3.0.0",
     "inquirer": "^7.0.4"
   },
   "devDependencies": {
